@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow
 [SemVer](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **`browser` MCP tool.** The hypruse-browser bridge for agents: tabs,
+  page snapshots, click, type, scroll and history, one `action` per call.
+  Opt-in like the clipboard (`HYPRUSE_BROWSER=1`); in read-only mode it
+  registers as an observation tool and refuses every acting action.
+  Replay refuses browser entries before taking the seat, because their
+  snapshot ids die with the session and the tool is opt-in on the server.
+
 ## [0.12.1] - 2026-10-11
 
 Fixes from a review of 0.12.0.

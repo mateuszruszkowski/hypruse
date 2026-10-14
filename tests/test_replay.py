@@ -382,6 +382,17 @@ def test_a_mark_click_is_refused_before_the_seat_is_taken(tmp_path, live, calls,
     assert calls == []
 
 
+def test_a_browser_action_is_refused_before_the_seat_is_taken(tmp_path, live, calls, capsys):
+    # its snapshot ids died with the session that took them, and the tool is
+    # opt-in on the server, so replay is never the way to drive the browser
+    path = _one(tmp_path, tool="browser", args={"action": "click", "snapshot_id": "s1-x"})
+    assert cli.replay([str(path), "--execute", "--yes"]) == 1
+    out = capsys.readouterr().out
+    assert "browser actions are not replayed" in out
+    assert "newer hypruse" not in out
+    assert calls == []
+
+
 def test_a_junk_duration_does_not_crash_the_pacing():
     entry = {"ts": "2026-08-02T09:00:05.000Z", "ms": "later"}
     assert cli._gap_before(entry, {"ts": "2026-08-02T09:00:00.000Z"}) == 0.0

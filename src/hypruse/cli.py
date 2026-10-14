@@ -557,7 +557,11 @@ def _unreplayable(entries: list[dict[str, Any]]) -> list[str]:
     reasons = []
     for entry in entries:
         tool, args, seq = entry.get("tool"), _args_of(entry), entry.get("seq", "?")
-        if tool not in journal_module().REPLAYABLE:
+        if tool == "browser":
+            # snapshot ids live in the page agent that took them, and the tool
+            # is opt-in on the server: replay is never the way around either
+            reasons.append(f"seq {seq}: browser actions are not replayed (snapshots are gone)")
+        elif tool not in journal_module().REPLAYABLE:
             reasons.append(f"seq {seq}: {_safe(tool)} (recorded by a newer hypruse)")
         elif not args:
             reasons.append(f"seq {seq}: {_safe(tool)} has no recorded arguments")
